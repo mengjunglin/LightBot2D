@@ -12,8 +12,11 @@ public class GameHandler : MonoBehaviour {
 	public Sprite spLight;
 	public Sprite spP1;
 	public Sprite spBlank;
+	public Sprite spTarget;
+	public Sprite spOn;
 	public GameObject goRocket;
 	public GameObject goPath;
+	public List<GameObject> targets;
 
 	private string type; //either main or proc
 	private List<int> mainSteps; // keeps track of the steps the user entered for main
@@ -122,6 +125,12 @@ public class GameHandler : MonoBehaviour {
 		goRocket.transform.position = startPos;
 		goRocket.transform.rotation = startRot;
 		direction = 0;
+
+		// reset targets
+		foreach (GameObject go in targets) {
+			SpriteRenderer sr = go.GetComponent<SpriteRenderer> ();
+			sr.sprite = spTarget;
+		}
 	}
 
 	public void Run()
@@ -131,7 +140,6 @@ public class GameHandler : MonoBehaviour {
 
 	IEnumerator ExecuteSteps()
 	{
-		Debug.Log ("Running!!!!!");
 		foreach (int action in mainSteps) {
 			if (action == 0) { // move forward
 				MoveForward ();
@@ -161,6 +169,11 @@ public class GameHandler : MonoBehaviour {
 			}
 		}
 		// TODO: check success
+		if (Success ()) {
+			Debug.Log ("Level complete!");
+		} else {
+			Debug.Log ("Didn't light all the targets!");
+		}
 	}
 
 	public void MoveForward()
@@ -218,12 +231,32 @@ public class GameHandler : MonoBehaviour {
 
 	public void toggleLight()
 	{
-		Debug.Log ("light");
+		// Check if current position is a target
+		RectTransform rt = (RectTransform)goPath.transform;
+		float w = rt.rect.width;
+		float h = rt.rect.height;
+
+		// if overlap, path exist
+		Collider2D colliders = Physics2D.OverlapBox (goRocket.transform.position, new Vector2 (w, h), 0f); // assume all other checks are successful, there should always be 1 item in this array
+		GameObject block = colliders.gameObject;
+		SpriteRenderer sr = block.GetComponent<SpriteRenderer> ();
+
+		// check if path is a target, then toggle blue/yellow
+		if (sr.sprite == spTarget) {
+			sr.sprite = spOn;
+		} else if (sr.sprite == spOn) {
+			sr.sprite = spTarget;
+		}
 	}
 
 	public bool Success()
 	{
 		// TODO: check if all target are lit
+		foreach (GameObject go in targets) {
+			SpriteRenderer sr = go.GetComponent<SpriteRenderer> ();
+			if (sr.sprite == spTarget)
+				return false;
+		}
 		return true;
 	}
 }

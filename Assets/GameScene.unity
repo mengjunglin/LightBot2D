@@ -3512,8 +3512,14 @@ MonoBehaviour:
   spLight: {fileID: 21300000, guid: e73105d6241614bf0b36fc6ecb10f0e6, type: 3}
   spP1: {fileID: 21300000, guid: 527a771d0904e41178e8710e50b199db, type: 3}
   spBlank: {fileID: 21300000, guid: 6dfc8108f08a3443e824eade5cdfca2e, type: 3}
+  spTarget: {fileID: 21300000, guid: 97d54a5678d414e469c04d0de5637361, type: 3}
+  spOn: {fileID: 21300000, guid: 2c10b879fd0734f19be77eb801627031, type: 3}
   goRocket: {fileID: 589706380}
   goPath: {fileID: 1018096535}
+  targets:
+  - {fileID: 1026750373}
+  - {fileID: 1547316807}
+  - {fileID: 114677130}
 --- !u!4 &1802636724
 Transform:
   m_ObjectHideFlags: 0
